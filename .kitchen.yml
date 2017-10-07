@@ -1,0 +1,36 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: salt_solo
+  is_file_root: true
+  salt_copy_filter:
+    - .kitchen
+    - .git
+  state_top:
+    base:
+      "*":
+        - test.mockup
+        - elasticsearch
+  pillars:
+    top.sls:
+      base:
+        "*":
+          - elasticsearch
+
+platforms:
+  - name: bento/debian-8.8
+
+suites:
+  - name: default
+    provisioner:
+      pillars:
+        elasticsearch.sls:
+          elasticsearch:
+            enabled: true
+
+  - name: custom
+    provisioner:
+      pillars-from-files:
+        elasticsearch.sls: pillar_custom.sls
