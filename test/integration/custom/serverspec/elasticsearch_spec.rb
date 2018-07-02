@@ -52,29 +52,20 @@ describe file('/etc/elasticsearch/log4j2.properties') do
   its(:content) { should match /^appender\.rolling\.filePattern = \$\{sys:es\.logs\.base_path\}\$\{sys:file\.separator\}\$\{sys:es\.logs\.cluster_name\}-\%d\{yyyy-MM-dd-HH-mm\}\.log\.gz/ }
   its(:content) { should match /^appender\.rolling\.strategy\.type = DefaultRolloverStrategy/ }
   its(:content) { should match /^appender\.rolling\.strategy\.max = 7/ }
-end
-
-describe file('/etc/elasticsearch/x-pack/log4j2.properties') do
-  it { should exist }
-  it { should be_file }
-  it { should be_mode 660 }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into 'elasticsearch' }
   its(:content) { should match /^appender\.audit_rolling\.strategy\.type = DefaultRolloverStrategy/ }
   its(:content) { should match /^appender\.audit_rolling\.strategy\.action\.condition.age = 5m/ }
 end
-
 
 describe file('/etc/default/elasticsearch') do
   it { should exist }
   it { should be_file }
   it { should be_mode 660 }
   it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
+  it { should be_grouped_into 'elasticsearch' }
   its(:content) { should match /ES_STARTUP_SLEEP_TIME=5/ }
 end
 
-describe file('/etc/elasticsearch/x-pack/users') do
+describe file('/etc/elasticsearch/users') do
   it { should exist }
   it { should be_file }
   its(:content) { should match /^r_user\:\$2a\$10\$P7jM0GFBu\.6tBR8ltIjcReFpBmtj\.1wKSryeUePInOQOgxE\.qSBTC/ }
@@ -83,7 +74,7 @@ describe file('/etc/elasticsearch/x-pack/users') do
   its(:content) { should match /^m_user\:\$2a\$10\$KlJDFOa0FQ6QcJlp9fUx\.erKQrkyaIt5xKb6j2OZlFMuZJPOWlTGW/ }
 end
 
-describe file('/etc/elasticsearch/x-pack/users_roles') do
+describe file('/etc/elasticsearch/users_roles') do
   it { should exist }
   it { should be_file }
   its(:content) { should match /monitoring_user:m_user/ }
@@ -92,28 +83,24 @@ describe file('/etc/elasticsearch/x-pack/users_roles') do
   its(:content) { should match /superuser:e_admin/ }
 end
 
-describe file('/etc/elasticsearch/x-pack/roles.yml') do
+describe file('/etc/elasticsearch/roles.yml') do
   it { should exist }
   it { should be_file }
   its(:content) { should match /^click_admins:/ }
   its(:content) { should match /^  run_as\:\n  - clicks_watcher_1/ }
   its(:content) { should match /^  cluster\:\n  - monitor/ }
   its(:content) { should match /^  indices\:/ }
-  its(:content) { should match /^  - field_security\:/ }
+  its(:content) { should match /^    field_security\:/ }
   its(:content) { should match /^      grant\:\n      - category\n      - '\@timestamp'\n      - message/ }
-  its(:content) { should match /^    names\:\n    - events-\*/ }
+  its(:content) { should match /^  - names\:\n    - events-\*/ }
   its(:content) { should match /^    privileges\:\n    - read/ }
   its(:content) { should match /^    query\: '\{"match"\: \{"category"\: "click"\}\}'/ }
 end
 
-describe file('/etc/elasticsearch/x-pack/system_key') do
+describe file('/etc/elasticsearch/system_key') do
   it { should exist }
   it { should be_file }
   it { should be_mode 640 }
-end
-
-describe command('/usr/share/elasticsearch/bin/elasticsearch-plugin list') do
-  its(:stdout) { should match /x-pack/ }
 end
 
 describe process('java') do
