@@ -20,7 +20,9 @@ provisioner:
           - elasticsearch
 
 platforms:
-  - name: bento/debian-8.8
+  - name: bento/debian-8
+  - name: bento/debian-9
+  - name: bento/centos-7
 
 suites:
   - name: default
