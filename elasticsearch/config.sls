@@ -13,10 +13,13 @@ elasticsearch_config:
     - watch_in:
       - service: elasticsearch_service
    
-{% if grains.os_family == "Debian" %}
-elasticsearch_config_debian_defaults:
+elasticsearch_config_defaults:
   file.managed:
+    {% if grains.os_family == "Debian" %}
     - name: /etc/default/elasticsearch
+    {% elif grains.os_family == "RedHat" %}
+    - name: /etc/sysconfig/elasticsearch
+    {% endif %}
     - source: salt://elasticsearch/files/default-elasticsearch.j2
     - template: jinja
     - user: root
@@ -24,7 +27,6 @@ elasticsearch_config_debian_defaults:
     - mode: 0660
     - watch_in:
       - service: elasticsearch_service
-{% endif %}
 
 elasticsearch_jvm_options:
   file.managed:

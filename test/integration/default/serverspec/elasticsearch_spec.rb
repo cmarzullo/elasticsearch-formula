@@ -35,3 +35,12 @@ describe file('/etc/default/elasticsearch'), :if => os[:family] == 'debian' do
   it { should be_grouped_into 'elasticsearch' }
   its(:sha256sum) { should eq '46c410bafb031ff5cc4f78e204e30e0bac5e23c7aae1c7b937458feba6209265' }
 end
+
+describe file('/etc/sysconfig/elasticsearch'), :if => os[:family] == 'redhat' do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 660 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'elasticsearch' }
+  its(:sha256sum) { should eq '46c410bafb031ff5cc4f78e204e30e0bac5e23c7aae1c7b937458feba6209265' }
+end

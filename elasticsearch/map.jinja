@@ -9,10 +9,15 @@ Setup variable using grains['os_family'] based logic, only add key:values here
 that differ from whats in defaults.yaml
 ##}
 {% set os_family_map = salt['grains.filter_by']({
-        'Debian': {},
+        'Debian': {
+          'dep_pkgs': ['ca-certificates-java', 'openjdk-8-jre-headless'],
+          'dep_fromrepo': 'jessie-backports'
+          },
         'Suse': {},
         'Arch': {},
-        'RedHat': {},
+        'RedHat': {
+          'dep_pkgs': ['java-1.8.0-openjdk-headless']
+          },
   }
   , grain="os_family"
   , merge=salt['pillar.get']('elasticsearch:lookup'))

@@ -56,7 +56,16 @@ describe file('/etc/elasticsearch/log4j2.properties') do
   its(:content) { should match /^appender\.audit_rolling\.strategy\.action\.condition.age = 5m/ }
 end
 
-describe file('/etc/default/elasticsearch') do
+describe file('/etc/default/elasticsearch'), :if => os[:family] == 'debian' do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 660 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'elasticsearch' }
+  its(:content) { should match /ES_STARTUP_SLEEP_TIME=5/ }
+end
+
+describe file('/etc/sysconfig/elasticsearch'), :if => os[:family] == 'redhat' do
   it { should exist }
   it { should be_file }
   it { should be_mode 660 }
